@@ -2,6 +2,7 @@ import type React from "react";
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { Suspense } from "react";
+import { Toaster } from "sonner";
 import { ErrorTriggerProvider } from "./contexts/ErrorTriggerContext";
 import "./globals.css";
 
@@ -31,6 +32,7 @@ export default function RootLayout({
             <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
           </ErrorTriggerProvider>
         </div>
+        <Toaster richColors closeButton position="bottom-right" theme="light" />
         <Analytics />
       </body>
     </html>
