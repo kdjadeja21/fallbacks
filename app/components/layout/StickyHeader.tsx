@@ -17,7 +17,7 @@ export function StickyHeader({ searchQuery, onSearchChange }: StickyHeaderProps)
               {"<"}Fallbacks{" />"}
             </h2>
             <h2 className="text-lg font-semibold text-foreground sm:hidden">
-              Templates
+              {"<"}Fallbacks{" />"}
             </h2>
           </div>
           
