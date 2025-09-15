@@ -1,0 +1,163 @@
+"use client"
+
+import React from "react"
+import type { Snippet } from "../lib/types"
+import { ProfessionalRedErrorBoundary } from "../components/error-boundaries/ProfessionalRedErrorBoundary"
+import { ProfessionalBlueErrorBoundary } from "../components/error-boundaries/ProfessionalBlueErrorBoundary"
+import { AnimatedErrorBoundary } from "../components/error-boundaries/AnimatedErrorBoundary"
+import { CollapsibleErrorBoundary } from "../components/error-boundaries/CollapsibleErrorBoundary"
+import { CompactErrorBoundary } from "../components/error-boundaries/CompactErrorBoundary"
+import { DarkModeErrorBoundary } from "../components/error-boundaries/DarkModeErrorBoundary"
+import { DetailedErrorBoundary } from "../components/error-boundaries/DetailedErrorBoundary"
+import { FancyErrorBoundary } from "../components/error-boundaries/FancyErrorBoundary"
+import { GradientErrorBoundary } from "../components/error-boundaries/GradientErrorBoundary"
+import { IconErrorBoundary } from "../components/error-boundaries/IconErrorBoundary"
+import { MinimalErrorBoundary } from "../components/error-boundaries/MinimalErrorBoundary"
+import { ProCardErrorBoundary } from "../components/error-boundaries/ProCardErrorBoundary"
+import { RetryErrorBoundary } from "../components/error-boundaries/RetryErrorBoundary"
+
+export const snippets: Snippet[] = [
+  {
+    id: "professional-red",
+    title: "Professional Red Error Boundary",
+    description: "Professional error boundary with red warning theme, collapsible details, and support guidance.",
+    component: ProfessionalRedErrorBoundary,
+    category: "professional",
+    tags: ["professional", "collapsible", "support", "warning"],
+    templatePath: "app/components/error-boundaries/ProfessionalRedErrorBoundary.tsx",
+    complexity: "intermediate" as const,
+    features: ["professional", "collapsible", "support", "warning"] as const,
+  },
+  {
+    id: "professional-blue",
+    title: "Professional Blue Error Boundary",
+    description: "Clean professional error boundary with blue info theme and inline action buttons.",
+    component: ProfessionalBlueErrorBoundary,
+    category: "professional",
+    tags: ["professional", "clean", "info", "inline-actions"],
+    templatePath: "app/components/error-boundaries/ProfessionalBlueErrorBoundary.tsx",
+    complexity: "intermediate" as const,
+    features: ["professional", "clean", "info", "inline-actions"] as const,
+  },
+  {
+    id: "pro-card",
+    title: "Pro Card Error Boundary",
+    description: "Professional card-style error boundary with modern design and comprehensive error handling.",
+    component: ProCardErrorBoundary,
+    category: "professional",
+    tags: ["professional", "card", "modern", "comprehensive"],
+    templatePath: "app/components/error-boundaries/ProCardErrorBoundary.tsx",
+    complexity: "advanced" as const,
+    features: ["professional", "card", "modern", "comprehensive"] as const,
+  },
+  {
+    id: "animated",
+    title: "Animated Error Boundary",
+    description: "Error boundary with smooth animations, bounce effects, and transition states.",
+    component: AnimatedErrorBoundary,
+    category: "interactive",
+    tags: ["animated", "smooth", "bounce", "transitions"],
+    templatePath: "app/components/error-boundaries/AnimatedErrorBoundary.tsx",
+    complexity: "advanced" as const,
+    features: ["animated", "smooth", "bounce", "transitions"] as const,
+  },
+  {
+    id: "retry",
+    title: "Retry Error Boundary",
+    description: "Smart error boundary with automatic retry logic, manual controls, and retry count tracking.",
+    component: RetryErrorBoundary,
+    category: "interactive",
+    tags: ["retry", "automatic", "smart", "loading", "tracking"],
+    templatePath: "app/components/error-boundaries/RetryErrorBoundary.tsx",
+    complexity: "advanced" as const,
+    features: ["retry", "automatic", "smart", "loading", "tracking"] as const,
+  },
+  {
+    id: "collapsible",
+    title: "Collapsible Error Boundary",
+    description: "Error boundary with collapsible error details, copy functionality, and comprehensive error info.",
+    component: CollapsibleErrorBoundary,
+    category: "detailed",
+    tags: ["collapsible", "details", "copy", "comprehensive"],
+    templatePath: "app/components/error-boundaries/CollapsibleErrorBoundary.tsx",
+    complexity: "intermediate" as const,
+    features: ["collapsible", "details", "copy", "comprehensive"] as const,
+  },
+  {
+    id: "detailed",
+    title: "Detailed Error Boundary",
+    description: "Comprehensive error boundary with full error details, stack traces, and support guidance.",
+    component: DetailedErrorBoundary,
+    category: "detailed",
+    tags: ["details", "stack-trace", "comprehensive", "support"],
+    templatePath: "app/components/error-boundaries/DetailedErrorBoundary.tsx",
+    complexity: "advanced" as const,
+    features: ["details", "stack-trace", "comprehensive", "support"] as const,
+  },
+  {
+    id: "minimal",
+    title: "Minimal Error Boundary",
+    description: "Clean minimal error boundary with essential features and collapsible error details.",
+    component: MinimalErrorBoundary,
+    category: "minimal",
+    tags: ["minimal", "clean", "essential", "simple"],
+    templatePath: "app/components/error-boundaries/MinimalErrorBoundary.tsx",
+    complexity: "simple" as const,
+    features: ["minimal", "clean", "essential", "simple"] as const,
+  },
+  {
+    id: "compact",
+    title: "Compact Error Boundary",
+    description: "Space-efficient compact error boundary with inline retry button and minimal footprint.",
+    component: CompactErrorBoundary,
+    category: "minimal",
+    tags: ["compact", "space-efficient", "inline", "minimal"],
+    templatePath: "app/components/error-boundaries/CompactErrorBoundary.tsx",
+    complexity: "simple" as const,
+    features: ["compact", "space-efficient", "inline", "minimal"] as const,
+  },
+  {
+    id: "dark-mode",
+    title: "Dark Mode Error Boundary",
+    description: "Dark-themed error boundary optimized for dark mode interfaces with red accent colors.",
+    component: DarkModeErrorBoundary,
+    category: "themed",
+    tags: ["dark-mode", "themed", "red-accent", "modern"],
+    templatePath: "app/components/error-boundaries/DarkModeErrorBoundary.tsx",
+    complexity: "intermediate" as const,
+    features: ["dark-mode", "themed", "red-accent", "modern"] as const,
+  },
+  {
+    id: "gradient",
+    title: "Gradient Error Boundary",
+    description: "Beautiful gradient-styled error boundary with purple-pink theme and modern visual effects.",
+    component: GradientErrorBoundary,
+    category: "themed",
+    tags: ["gradient", "colorful", "modern", "beautiful"],
+    templatePath: "app/components/error-boundaries/GradientErrorBoundary.tsx",
+    complexity: "intermediate" as const,
+    features: ["gradient", "colorful", "modern", "beautiful"] as const,
+  },
+  {
+    id: "fancy",
+    title: "Fancy Error Boundary",
+    description: "Elegant error boundary with orange gradient theme, shadow effects, and premium styling.",
+    component: FancyErrorBoundary,
+    category: "themed",
+    tags: ["fancy", "elegant", "premium", "shadow"],
+    templatePath: "app/components/error-boundaries/FancyErrorBoundary.tsx",
+    complexity: "intermediate" as const,
+    features: ["fancy", "elegant", "premium", "shadow"] as const,
+  },
+  {
+    id: "icon",
+    title: "Icon Error Boundary",
+    description: "Icon-focused error boundary with centered layout, custom SVG icons, and orange theme.",
+    component: IconErrorBoundary,
+    category: "themed",
+    tags: ["icon", "centered", "svg", "orange"],
+    templatePath: "app/components/error-boundaries/IconErrorBoundary.tsx",
+    complexity: "simple" as const,
+    features: ["icon", "centered", "svg", "orange"] as const,
+  },
+]
