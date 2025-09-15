@@ -54,6 +54,26 @@ export const SNIPPET_FEATURES: Record<SnippetFeature, string> = {
   compact: 'Compact Design'
 } as const
 
+export const SNIPPET_LANGUAGES: Record<string, string> = {
+  jsx: 'JSX',
+  tsx: 'TypeScript React',
+  css: 'CSS',
+  tailwind: 'Tailwind CSS',
+  html: 'HTML',
+  scss: 'SCSS',
+  sass: 'Sass',
+  'styled-components': 'Styled Components',
+  emotion: 'Emotion'
+} as const
+
+export const SNIPPET_BADGES: Record<string, { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' }> = {
+  new: { label: 'New', variant: 'default' },
+  popular: { label: 'Popular', variant: 'secondary' },
+  stable: { label: 'Stable', variant: 'outline' },
+  beta: { label: 'Beta', variant: 'secondary' },
+  experimental: { label: 'Experimental', variant: 'destructive' }
+} as const
+
 export const TEMPLATE_PATHS = {
   TEMPLATES_DIR: 'app/components/error-boundaries',
   API_ENDPOINT: '/api/download-template'

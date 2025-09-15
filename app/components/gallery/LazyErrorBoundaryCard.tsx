@@ -8,7 +8,7 @@ import { Copy, Download, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { createLazyTemplate, type TemplateId } from "../../lib/template-loader";
 import type { Snippet } from "../../lib/types";
-import { SNIPPET_CATEGORIES } from "../../lib/constants";
+import { SNIPPET_CATEGORIES, SNIPPET_LANGUAGES, SNIPPET_BADGES } from "../../lib/constants";
 import { ErrorTrigger as CentralizedErrorTrigger } from "../common/ErrorTrigger";
 import { useErrorTriggerContextSafe } from "../../contexts/ErrorTriggerContext";
 
@@ -177,42 +177,73 @@ export function LazyErrorBoundaryCard({ snippet }: Props) {
   }, [snippet.id]);
 
   return (
-    <Card className="h-fit">
+    <Card className="h-fit hover:shadow-lg transition-shadow duration-200">
       <CardHeader>
         <div className="flex items-start justify-between gap-4">
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-2">
+          <div className="flex-1 min-w-0 space-y-3">
+            <div className="flex items-center gap-2 flex-wrap">
               <CardTitle className="text-lg">{snippet.title}</CardTitle>
-              <Badge variant="secondary" className="text-xs">
+              {/* <Badge variant="secondary" className="text-xs">
                 {SNIPPET_CATEGORIES[snippet.category]}
               </Badge>
+              {snippet.badge && (
+                <Badge 
+                  variant={SNIPPET_BADGES[snippet.badge].variant} 
+                  className="text-xs font-medium"
+                >
+                  {SNIPPET_BADGES[snippet.badge].label}
+                </Badge>
+              )} */}
             </div>
-            <div className="flex flex-wrap gap-1">
+            
+            {/* Languages Section */}
+            {/* {snippet.languages && snippet.languages.length > 0 && (
+              <div className="flex flex-wrap gap-1 items-center">
+                <span className="text-sm text-muted-foreground font-medium">Languages:</span>
+                {snippet.languages.map((language) => (
+                  <Badge 
+                    key={language} 
+                    variant="outline" 
+                    className="text-xs bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100 transition-colors duration-150"
+                  >
+                    {SNIPPET_LANGUAGES[language] || language}
+                  </Badge>
+                ))}
+              </div>
+            )} */}
+            
+            {/* Features Section */}
+            {/* <div className="flex flex-wrap gap-1 items-center">
+              <span className="text-sm text-muted-foreground font-medium">Features:</span>
               {snippet.features.map((feature) => (
-                <Badge key={feature} variant="outline" className="text-xs">
+                <Badge 
+                  key={feature} 
+                  variant="outline" 
+                  className="text-xs hover:bg-gray-50 transition-colors duration-150"
+                >
                   {feature}
                 </Badge>
               ))}
-            </div>
+            </div> */}
           </div>
           <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2 flex-shrink-0">
             <Button
               variant="outline"
               size="sm"
               onClick={handleCopy}
-              className="cursor-pointer w-full sm:w-auto flex items-center gap-2"
+              className="cursor-pointer w-full sm:w-auto flex items-center gap-2 hover:bg-primary hover:text-primary-foreground transition-colors duration-200"
             >
               <Copy className="h-4 w-4" />
-              <span className="hidden xs:inline">Copy Snippet</span>
+              <span>Copy</span>
             </Button>
             <Button
               variant="outline"
               size="sm"
               onClick={handleDownload}
-              className="cursor-pointer w-full sm:w-auto flex items-center gap-2"
+              className="cursor-pointer w-full sm:w-auto flex items-center gap-2 hover:bg-primary hover:text-primary-foreground transition-colors duration-200"
             >
               <Download className="h-4 w-4" />
-              <span className="hidden xs:inline">Download</span>
+              <span>Download</span>
             </Button>
           </div>
         </div>

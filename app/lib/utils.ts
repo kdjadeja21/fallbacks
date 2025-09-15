@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
-import type { Snippet, SnippetCategory, SnippetFeature } from './types'
+import type { Snippet, SnippetCategory, SnippetFeature, SnippetLanguage, SnippetBadge } from './types'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -10,7 +10,9 @@ export function filterSnippets(
   snippets: Snippet[],
   searchQuery: string,
   selectedCategory: SnippetCategory | null,
-  selectedTags: SnippetFeature[]
+  selectedTags: SnippetFeature[],
+  selectedLanguages: SnippetLanguage[] = [],
+  selectedBadges: SnippetBadge[] = []
 ): Snippet[] {
   return snippets.filter(snippet => {
     // Enhanced search - search in title, description, id, category, and features
@@ -31,7 +33,13 @@ export function filterSnippets(
         snippet.features.includes(tag) || snippet.tags.includes(tag)
       )
 
-    return matchesSearch && matchesCategory && matchesTags
+    const matchesLanguages = selectedLanguages.length === 0 ||
+      selectedLanguages.every(lang => snippet.languages.includes(lang))
+
+    const matchesBadges = selectedBadges.length === 0 ||
+      (snippet.badge && selectedBadges.includes(snippet.badge))
+
+    return matchesSearch && matchesCategory && matchesTags && matchesLanguages && matchesBadges
   })
 }
 
