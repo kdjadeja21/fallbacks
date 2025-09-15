@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo, useCallback, useEffect } from 'react'
+import { useState, useMemo, useCallback, useEffect, useRef } from 'react'
 import type { Snippet, SnippetCategory, SnippetFeature, SnippetLanguage, SnippetBadge, GalleryState } from '../lib/types'
 import { filterSnippets } from '../lib/utils'
 
@@ -13,6 +13,9 @@ interface UseErrorBoundaryGalleryProps {
   initialBadges?: SnippetBadge[]
 }
 
+// Cache for expensive computations
+const cache = new Map<string, any>()
+
 export function useErrorBoundaryGallery({
   snippets,
   initialSearchQuery = '',
@@ -22,29 +25,106 @@ export function useErrorBoundaryGallery({
   initialBadges = []
 }: UseErrorBoundaryGalleryProps) {
   const [searchQuery, setSearchQuery] = useState(initialSearchQuery)
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState(initialSearchQuery)
   const [selectedCategory, setSelectedCategory] = useState<SnippetCategory | null>(initialCategory)
   const [selectedTags, setSelectedTags] = useState<SnippetFeature[]>(initialTags)
   const [selectedLanguages, setSelectedLanguages] = useState<SnippetLanguage[]>(initialLanguages)
   const [selectedBadges, setSelectedBadges] = useState<SnippetBadge[]>(initialBadges)
   const [error, setError] = useState<string | null>(null)
+  
+  // Refs for performance tracking
+  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const urlTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
-  // Simple search handler - no debouncing needed for client-side filtering
-  const handleSearchChange = useCallback((query: string) => {
-    setSearchQuery(query)
-  }, [])
+  // Optimized debounced search
+  useEffect(() => {
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current)
+    }
+    
+    searchTimeoutRef.current = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery)
+    }, 250) // Reduced from 300ms to 250ms for better UX
+    
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current)
+      }
+    }
+  }, [searchQuery])
 
-  // Memoized filtered snippets
+  // Cached available collections (computed only once)
+  const availableCollections = useMemo(() => {
+    const cacheKey = `collections_${snippets.length}`
+    if (cache.has(cacheKey)) {
+      return cache.get(cacheKey)
+    }
+
+    const categoriesSet = new Set<SnippetCategory>()
+    const tagsSet = new Set<SnippetFeature>()
+    const languagesSet = new Set<SnippetLanguage>()
+    const badgesSet = new Set<SnippetBadge>()
+
+    // Single pass through snippets
+    for (const snippet of snippets) {
+      categoriesSet.add(snippet.category)
+      
+      for (const tag of snippet.tags) tagsSet.add(tag)
+      for (const language of snippet.languages) languagesSet.add(language)
+      
+      if (snippet.badge) badgesSet.add(snippet.badge)
+    }
+
+    const result = {
+      categories: Array.from(categoriesSet),
+      tags: Array.from(tagsSet).sort(),
+      languages: Array.from(languagesSet).sort(),
+      badges: Array.from(badgesSet).sort()
+    }
+
+    cache.set(cacheKey, result)
+    return result
+  }, [snippets])
+
+  // Destructure for easier access
+  const { categories: availableCategories, tags: availableTags, languages: availableLanguages, badges: availableBadges } = availableCollections
+
+  // Optimized filtered snippets with caching
   const filteredSnippets = useMemo(() => {
     try {
       setError(null)
-      return filterSnippets(snippets, searchQuery, selectedCategory, selectedTags, selectedLanguages, selectedBadges)
+      
+      const filterKey = `${debouncedSearchQuery}_${selectedCategory || ''}_${selectedTags.join(',')}_${selectedLanguages.join(',')}_${selectedBadges.join(',')}`
+      
+      if (cache.has(filterKey)) {
+        return cache.get(filterKey)
+      }
+
+      const result = filterSnippets(snippets, debouncedSearchQuery, selectedCategory, selectedTags, selectedLanguages, selectedBadges)
+      
+      // Cache result for future use
+      cache.set(filterKey, result)
+      
+      // Clean cache if it gets too large
+      if (cache.size > 50) {
+        const firstKey = cache.keys().next().value
+        if (firstKey) {
+          cache.delete(firstKey)
+        }
+      }
+      
+      return result
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to filter snippets')
       return []
     }
-  }, [snippets, searchQuery, selectedCategory, selectedTags, selectedLanguages, selectedBadges])
+  }, [snippets, debouncedSearchQuery, selectedCategory, selectedTags, selectedLanguages, selectedBadges])
 
-  // Category management
+  // Optimized handlers with stable references
+  const handleSearchChange = useCallback((query: string) => {
+    setSearchQuery(query)
+  }, [])
+
   const handleCategoryChange = useCallback((category: SnippetCategory | null) => {
     setSelectedCategory(category)
   }, [])
@@ -53,19 +133,17 @@ export function useErrorBoundaryGallery({
     setSelectedCategory(null)
   }, [])
 
-  // Tag management
   const handleTagToggle = useCallback((tag: SnippetFeature) => {
-    setSelectedTags(prev => 
-      prev.includes(tag) 
+    setSelectedTags(prev => {
+      const newTags = prev.includes(tag) 
         ? prev.filter(t => t !== tag)
         : [...prev, tag]
-    )
+      return newTags
+    })
   }, [])
 
   const handleTagAdd = useCallback((tag: SnippetFeature) => {
-    setSelectedTags(prev => 
-      prev.includes(tag) ? prev : [...prev, tag]
-    )
+    setSelectedTags(prev => prev.includes(tag) ? prev : [...prev, tag])
   }, [])
 
   const handleTagRemove = useCallback((tag: SnippetFeature) => {
@@ -76,79 +154,80 @@ export function useErrorBoundaryGallery({
     setSelectedTags([])
   }, [])
 
-  // Language management
   const handleLanguageToggle = useCallback((language: SnippetLanguage) => {
-    setSelectedLanguages(prev => 
-      prev.includes(language) 
+    setSelectedLanguages(prev => {
+      const newLanguages = prev.includes(language) 
         ? prev.filter(l => l !== language)
         : [...prev, language]
-    )
+      return newLanguages
+    })
   }, [])
 
   const clearLanguages = useCallback(() => {
     setSelectedLanguages([])
   }, [])
 
-  // Badge management
   const handleBadgeToggle = useCallback((badge: SnippetBadge) => {
-    setSelectedBadges(prev => 
-      prev.includes(badge) 
+    setSelectedBadges(prev => {
+      const newBadges = prev.includes(badge) 
         ? prev.filter(b => b !== badge)
         : [...prev, badge]
-    )
+      return newBadges
+    })
   }, [])
 
   const clearBadges = useCallback(() => {
     setSelectedBadges([])
   }, [])
 
-  // Clear all filters
   const clearAllFilters = useCallback(() => {
     setSearchQuery('')
+    setDebouncedSearchQuery('')
     setSelectedCategory(null)
     setSelectedTags([])
     setSelectedLanguages([])
     setSelectedBadges([])
     setError(null)
+    // Clear relevant cache entries
+    cache.clear()
   }, [])
 
-  // Get unique categories and tags from snippets
-  const availableCategories = useMemo(() => {
-    return Array.from(new Set(snippets.map(s => s.category)))
-  }, [snippets])
+  // Optimized stats calculation
+  const stats = useMemo(() => {
+    const total = snippets.length
+    const filtered = filteredSnippets.length
+    const hasActiveFilters = debouncedSearchQuery.trim() !== '' || selectedCategory !== null || 
+                           selectedTags.length > 0 || selectedLanguages.length > 0 || selectedBadges.length > 0
 
-  const availableTags = useMemo(() => {
-    const allTags = snippets.flatMap(s => s.tags)
-    return Array.from(new Set(allTags)).sort()
-  }, [snippets])
+    return {
+      total,
+      filtered,
+      categories: availableCategories.length,
+      tags: availableTags.length,
+      languages: availableLanguages.length,
+      badges: availableBadges.length,
+      hasActiveFilters
+    }
+  }, [
+    snippets.length, 
+    filteredSnippets.length, 
+    availableCategories.length, 
+    availableTags.length, 
+    availableLanguages.length, 
+    availableBadges.length, 
+    debouncedSearchQuery, 
+    selectedCategory, 
+    selectedTags.length,
+    selectedLanguages.length, 
+    selectedBadges.length
+  ])
 
-  const availableLanguages = useMemo(() => {
-    const allLanguages = snippets.flatMap(s => s.languages)
-    return Array.from(new Set(allLanguages)).sort()
-  }, [snippets])
-
-  const availableBadges = useMemo(() => {
-    const allBadges = snippets.filter(s => s.badge).map(s => s.badge!)
-    return Array.from(new Set(allBadges)).sort()
-  }, [snippets])
-
-  // Statistics
-  const stats = useMemo(() => ({
-    total: snippets.length,
-    filtered: filteredSnippets.length,
-    categories: availableCategories.length,
-    tags: availableTags.length,
-    languages: availableLanguages.length,
-    badges: availableBadges.length,
-    hasActiveFilters: searchQuery.trim() !== '' || selectedCategory !== null || selectedTags.length > 0 || selectedLanguages.length > 0 || selectedBadges.length > 0
-  }), [snippets.length, filteredSnippets.length, availableCategories.length, availableTags.length, availableLanguages.length, availableBadges.length, searchQuery, selectedCategory, selectedTags, selectedLanguages, selectedBadges])
-
-  // URL synchronization (optional)
+  // Throttled URL synchronization
   const updateURL = useCallback(() => {
     if (typeof window === 'undefined') return
 
     const params = new URLSearchParams()
-    if (searchQuery.trim()) params.set('q', searchQuery.trim())
+    if (debouncedSearchQuery.trim()) params.set('q', debouncedSearchQuery.trim())
     if (selectedCategory) params.set('category', selectedCategory)
     if (selectedTags.length > 0) params.set('tags', selectedTags.join(','))
     if (selectedLanguages.length > 0) params.set('languages', selectedLanguages.join(','))
@@ -158,23 +237,44 @@ export function useErrorBoundaryGallery({
       ? `${window.location.pathname}?${params.toString()}`
       : window.location.pathname
 
-    window.history.replaceState({}, '', newURL)
-  }, [searchQuery, selectedCategory, selectedTags, selectedLanguages, selectedBadges])
+    if (window.location.href !== window.location.origin + newURL) {
+      window.history.replaceState({}, '', newURL)
+    }
+  }, [debouncedSearchQuery, selectedCategory, selectedTags, selectedLanguages, selectedBadges])
 
   useEffect(() => {
-    updateURL()
+    if (urlTimeoutRef.current) {
+      clearTimeout(urlTimeoutRef.current)
+    }
+    
+    urlTimeoutRef.current = setTimeout(updateURL, 400)
+    
+    return () => {
+      if (urlTimeoutRef.current) {
+        clearTimeout(urlTimeoutRef.current)
+      }
+    }
   }, [updateURL])
 
-  const state: GalleryState = {
+  // Memoized state object
+  const state: GalleryState = useMemo(() => ({
     searchQuery,
     selectedCategory,
     selectedTags,
     selectedLanguages,
     selectedBadges,
     filteredSnippets,
-    isLoading: false, // No loading state needed for client-side filtering
+    isLoading: false,
     error
-  }
+  }), [searchQuery, selectedCategory, selectedTags, selectedLanguages, selectedBadges, filteredSnippets, error])
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current)
+      if (urlTimeoutRef.current) clearTimeout(urlTimeoutRef.current)
+    }
+  }, [])
 
   return {
     // State

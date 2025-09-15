@@ -22,6 +22,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollToTop } from "@/components/ui/scroll-to-top";
 import {
   Sheet,
   SheetContent,
@@ -726,7 +727,7 @@ export default function Home() {
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
               <div className="text-center md:text-left">
                 <p className="text-muted-foreground">
-                  Built with Next.js, React, TypeScript, and Tailwind CSS
+                  {"<"}Fallbacks{" />"} &copy; {new Date().getFullYear()}
                 </p>
                 <p className="text-sm text-muted-foreground mt-1">
                   Ready-to-use error boundary templates for React applications
@@ -736,7 +737,7 @@ export default function Home() {
               <div className="flex items-center gap-4">
                 <Button variant="ghost" size="sm" asChild>
                   <a
-                    href="https://github.com"
+                    href="https://github.com/kdjadeja21/fallbacks"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-2"
@@ -760,6 +761,9 @@ export default function Home() {
             </div>
           </div>
         </footer>
+        
+        {/* Scroll to Top Component */}
+        <ScrollToTop />
       </div>
     </div>
   );
