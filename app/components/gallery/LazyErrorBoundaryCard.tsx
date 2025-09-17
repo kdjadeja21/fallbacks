@@ -3,12 +3,10 @@
 import React, { Suspense, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Copy, Download, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { createLazyTemplate, type TemplateId } from "../../lib/template-loader";
 import type { Snippet } from "../../lib/types";
-import { SNIPPET_CATEGORIES, SNIPPET_LANGUAGES, SNIPPET_BADGES } from "../../lib/constants";
 import { ErrorTrigger as CentralizedErrorTrigger } from "../common/ErrorTrigger";
 import { useErrorTriggerContextSafe } from "../../contexts/ErrorTriggerContext";
 
@@ -80,11 +78,15 @@ class TemplateErrorBoundary extends React.Component<
 
 export function LazyErrorBoundaryCard({ snippet }: Props) {
   const [retryKey, setRetryKey] = React.useState(0);
+  const [isDownloading, setIsDownloading] = React.useState(false);
+  const [isCopying, setIsCopying] = React.useState(false);
   const { triggerKey, shouldTriggerErrors } = useErrorTriggerContextSafe();
 
   const handleDownload = async () => {
+    if (isDownloading) return; // Prevent multiple concurrent downloads
+    
+    setIsDownloading(true);
     try {
-      console.log("[Gallery] Starting download for:", snippet.templatePath);
       const response = await fetch(
         `/api/download-template?path=${encodeURIComponent(
           snippet.templatePath
@@ -98,7 +100,6 @@ export function LazyErrorBoundaryCard({ snippet }: Props) {
       }
 
       const blob = await response.blob();
-      console.log("[Gallery] Got blob, size:", blob.size);
 
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -110,7 +111,6 @@ export function LazyErrorBoundaryCard({ snippet }: Props) {
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
 
-      console.log("[Gallery] Download completed successfully");
       toast.success(`Template "${snippet.title}" downloaded successfully`);
     } catch (error) {
       console.error("[Gallery] Download failed:", error);
@@ -119,12 +119,16 @@ export function LazyErrorBoundaryCard({ snippet }: Props) {
           error instanceof Error ? error.message : "Unknown error"
         }`
       );
+    } finally {
+      setIsDownloading(false);
     }
   };
 
   const handleCopy = async () => {
+    if (isCopying) return; // Prevent multiple concurrent copies
+    
+    setIsCopying(true);
     try {
-      console.log("[v0] Starting copy for:", snippet.templatePath);
       const response = await fetch(
         `/api/download-template?path=${encodeURIComponent(
           snippet.templatePath
@@ -141,7 +145,6 @@ export function LazyErrorBoundaryCard({ snippet }: Props) {
       const textWithTitle = `// ${snippet.title}\n\n${text}`;
       
       await navigator.clipboard.writeText(textWithTitle);
-      console.log("[v0] Snippet copied successfully");
       toast.success(`Template "${snippet.title}" copied to clipboard`);
     } catch (error) {
       console.error("[v0] Copy failed:", error);
@@ -150,6 +153,8 @@ export function LazyErrorBoundaryCard({ snippet }: Props) {
           error instanceof Error ? error.message : "Unknown error"
         }`
       );
+    } finally {
+      setIsCopying(false);
     }
   };
 
@@ -158,7 +163,7 @@ export function LazyErrorBoundaryCard({ snippet }: Props) {
   };
 
   const handleErrorTriggered = () => {
-    console.log("Error triggered in gallery card:", snippet.id);
+    console.error("Error triggered in gallery card:", snippet.id);
     // toast.error(`Error triggered in "${snippet.id}.tsx" template`);
   };
 
@@ -231,19 +236,29 @@ export function LazyErrorBoundaryCard({ snippet }: Props) {
               variant="outline"
               size="sm"
               onClick={handleCopy}
-              className="cursor-pointer w-full sm:w-auto flex items-center gap-2 hover:bg-primary hover:text-primary-foreground transition-colors duration-200"
+              disabled={isCopying}
+              className="cursor-pointer w-full sm:w-auto flex items-center gap-2 hover:bg-primary hover:text-primary-foreground transition-colors duration-200 disabled:cursor-not-allowed"
             >
-              <Copy className="h-4 w-4" />
-              <span>Copy</span>
+              {isCopying ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Copy className="h-4 w-4" />
+              )}
+              <span>{isCopying ? "Copying..." : "Copy"}</span>
             </Button>
             <Button
               variant="outline"
               size="sm"
               onClick={handleDownload}
-              className="cursor-pointer w-full sm:w-auto flex items-center gap-2 hover:bg-primary hover:text-primary-foreground transition-colors duration-200"
+              disabled={isDownloading}
+              className="cursor-pointer w-full sm:w-auto flex items-center gap-2 hover:bg-primary hover:text-primary-foreground transition-colors duration-200 disabled:cursor-not-allowed"
             >
-              <Download className="h-4 w-4" />
-              <span>Download</span>
+              {isDownloading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Download className="h-4 w-4" />
+              )}
+              <span>{isDownloading ? "Downloading..." : "Download"}</span>
             </Button>
           </div>
         </div>
