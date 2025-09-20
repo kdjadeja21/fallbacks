@@ -24,9 +24,9 @@ export class IconErrorBoundary extends React.Component<Props, State> {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="p-6 text-center border border-orange-200 rounded-lg bg-orange-50">
-          <div className="w-16 h-16 bg-orange-100 rounded-full mx-auto mb-4 flex items-center justify-center">
-            <svg className="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="p-4 sm:p-6 text-center border border-orange-200 rounded-lg bg-orange-50">
+          <div className="w-14 h-14 sm:w-16 sm:h-16 bg-orange-100 rounded-full mx-auto mb-4 flex items-center justify-center">
+            <svg className="w-7 h-7 sm:w-8 sm:h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -35,23 +35,23 @@ export class IconErrorBoundary extends React.Component<Props, State> {
               />
             </svg>
           </div>
-          <h2 className="text-xl font-bold text-orange-800 mb-2">Component Error</h2>
-          <p className="text-orange-700 mb-4">This component encountered an unexpected error and couldn't load.</p>
-          <div className="flex justify-center space-x-3">
+          <h2 className="text-lg sm:text-xl font-bold text-orange-800 mb-2">Component Error</h2>
+          <p className="text-orange-700 mb-4 px-2">This component encountered an unexpected error and couldn't load.</p>
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-3">
             {this.props.onReset && (
               <button
                 onClick={() => {
                   this.setState({ hasError: false })
                   this.props.onReset?.()
                 }}
-                className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700"
+                className="w-full sm:w-auto px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
               >
                 Try Again
               </button>
             )}
             <button
               onClick={() => window.location.reload()}
-              className="px-4 py-2 border border-orange-600 text-orange-600 rounded-lg hover:bg-orange-50"
+              className="w-full sm:w-auto px-4 py-2 border border-orange-600 text-orange-600 rounded-lg hover:bg-orange-50 transition-colors"
             >
               Reload Page
             </button>

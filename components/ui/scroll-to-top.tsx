@@ -81,7 +81,7 @@ export function ScrollToTop({
         onClick={scrollToTop}
         size={size}
         variant={variant}
-        className="shadow-lg hover:shadow-xl transition-shadow duration-200"
+        className="cursor-pointer shadow-lg hover:shadow-xl transition-shadow duration-200"
         aria-label="Scroll to top"
       >
         <ArrowUp className="h-4 w-4" />

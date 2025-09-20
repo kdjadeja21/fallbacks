@@ -15,7 +15,7 @@ A collection of reusable, customizable Error Boundary components for Next.js app
 
 1. Clone the repository:
    ```bash
-   git clone <repo>
+   git clone https://github.com/kdjadeja21/fallbacks.git
    ```
 
 2. Install dependencies:
@@ -69,37 +69,77 @@ export default function MyComponent() {
    // Example: CustomErrorBoundary.tsx
    ```
 
-2. Implement your error boundary component using the base structure:
+2. Implement your error boundary component as a standalone class component:
    ```tsx
-   'use client';
-   
-   import { ErrorBoundary } from 'react-error-boundary';
-   import { YourErrorFallbackComponent } from './YourFallbackComponent';
+   "use client"
 
-   export function CustomErrorBoundary({ children }) {
-     return (
-       <ErrorBoundary
-         FallbackComponent={YourErrorFallbackComponent}
-         onReset={() => {
-           // Reset error boundary state
-         }}
-       >
-         {children}
-       </ErrorBoundary>
-     );
+   import React from "react"
+   import { Button } from "@/components/ui/button" // Optional UI components
+
+   interface Props {
+     children: React.ReactNode
+     onReset?: () => void
+   }
+
+   interface State {
+     hasError: boolean
+     error?: Error
+   }
+
+   export class CustomErrorBoundary extends React.Component<Props, State> {
+     constructor(props: Props) {
+       super(props)
+       this.state = { hasError: false }
+     }
+
+     static getDerivedStateFromError(error: Error): State {
+       return { hasError: true, error }
+     }
+
+     componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+       console.error("Error caught:", error, errorInfo)
+       // Add your error logging logic here
+     }
+
+     render() {
+       if (this.state.hasError) {
+         return (
+           <div className="your-error-ui-styles">
+             <h2>Something went wrong</h2>
+             <p>Your custom error message</p>
+             <Button
+               onClick={() => {
+                 this.setState({ hasError: false })
+                 this.props.onReset?.()
+               }}
+             >
+               Try Again
+             </Button>
+           </div>
+         )
+       }
+
+       return this.props.children
+     }
    }
    ```
 
 3. Add your template to the gallery by updating `app/data/snippets.tsx`:
    ```tsx
-   export const templates = [
+   export const snippets: Snippet[] = [
      // ... existing templates
      {
-       name: 'Custom Template',
-       component: CustomErrorBoundary,
+       id: 'custom-template',
+       title: 'Custom Template',
        description: 'Your template description',
-       tags: ['custom', 'other-relevant-tags'],
-       templatePath:'path',
+       component: CustomErrorBoundary,
+       category: 'custom', // or appropriate category
+       tags: ['custom', 'other-relevant-tags'] as const,
+       templatePath: 'app/components/error-boundaries/CustomErrorBoundary.tsx',
+       complexity: 'beginner' as const, // or 'intermediate', 'advanced'
+       features: ['custom', 'other-features'] as const,
+       languages: ['tsx', 'tailwind'] as const,
+       badge: 'new' as const, // or 'stable', 'experimental'
      },
    ];
    ```
@@ -121,7 +161,6 @@ export default function MyComponent() {
 - Follow the existing code structure and naming conventions
 - Ensure components are properly typed with TypeScript
 - Add proper documentation and comments
-- Test for accessibility
 - Keep the bundle size in mind
 - Ensure responsive design
 
