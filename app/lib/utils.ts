@@ -1,6 +1,7 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
-import type { Snippet, SnippetCategory, SnippetFeature, SnippetLanguage, SnippetBadge } from './types'
+import type { Snippet, SnippetCategory, SnippetFeature, SnippetLanguage, SnippetBadge, SortField, SortDirection } from './types'
+import { COMPLEXITY_ORDER, BADGE_ORDER } from './constants'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -64,4 +65,37 @@ export function sanitizeFilePath(path: string): string {
 
 export function validateTemplateId(id: string): boolean {
   return /^[a-z0-9\-]+$/.test(id)
+}
+
+export function sortSnippets(
+  snippets: Snippet[],
+  sortField: SortField,
+  sortDirection: SortDirection
+): Snippet[] {
+  const sorted = [...snippets].sort((a, b) => {
+    let comparison = 0;
+
+    switch (sortField) {
+      case 'title':
+        comparison = a.title.localeCompare(b.title);
+        break;
+      case 'category':
+        comparison = a.category.localeCompare(b.category);
+        break;
+      case 'complexity':
+        comparison = (COMPLEXITY_ORDER[a.complexity] ?? 999) - (COMPLEXITY_ORDER[b.complexity] ?? 999);
+        break;
+      case 'badge':
+        const aBadgeOrder = a.badge ? (BADGE_ORDER[a.badge] ?? 999) : 999;
+        const bBadgeOrder = b.badge ? (BADGE_ORDER[b.badge] ?? 999) : 999;
+        comparison = aBadgeOrder - bBadgeOrder;
+        break;
+      default:
+        comparison = 0;
+    }
+
+    return sortDirection === 'desc' ? -comparison : comparison;
+  });
+
+  return sorted;
 }

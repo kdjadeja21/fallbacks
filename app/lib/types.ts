@@ -23,6 +23,9 @@ export type SnippetFeature = 'retry' | 'collapsible' | 'copy' | 'animated' | 'th
 export type SnippetLanguage = 'jsx' | 'tsx' | 'css' | 'tailwind' | 'html' | 'scss' | 'sass' | 'styled-components' | 'emotion'
 export type SnippetBadge = 'new' | 'popular' | 'stable' | 'beta' | 'experimental'
 
+export type SortField = 'title' | 'category' | 'complexity' | 'badge'
+export type SortDirection = 'asc' | 'desc'
+
 export interface Snippet {
   id: string
   title: string
@@ -50,6 +53,8 @@ export interface GalleryFilters {
   selectedTags: SnippetFeature[]
   selectedLanguages: SnippetLanguage[]
   selectedBadges: SnippetBadge[]
+  sortField: SortField
+  sortDirection: SortDirection
 }
 
 export interface GalleryState extends GalleryFilters {

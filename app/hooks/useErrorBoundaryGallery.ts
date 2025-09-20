@@ -1,8 +1,8 @@
 "use client"
 
 import { useState, useMemo, useCallback, useEffect, useRef } from 'react'
-import type { Snippet, SnippetCategory, SnippetFeature, SnippetLanguage, SnippetBadge, GalleryState } from '../lib/types'
-import { filterSnippets } from '../lib/utils'
+import type { Snippet, SnippetCategory, SnippetFeature, SnippetLanguage, SnippetBadge, GalleryState, SortField, SortDirection } from '../lib/types'
+import { filterSnippets, sortSnippets } from '../lib/utils'
 
 interface UseErrorBoundaryGalleryProps {
   snippets: Snippet[]
@@ -11,6 +11,8 @@ interface UseErrorBoundaryGalleryProps {
   initialTags?: SnippetFeature[]
   initialLanguages?: SnippetLanguage[]
   initialBadges?: SnippetBadge[]
+  initialSortField?: SortField
+  initialSortDirection?: SortDirection
 }
 
 // Cache for expensive computations
@@ -22,7 +24,9 @@ export function useErrorBoundaryGallery({
   initialCategory = null,
   initialTags = [],
   initialLanguages = [],
-  initialBadges = []
+  initialBadges = [],
+  initialSortField = 'badge',
+  initialSortDirection = 'desc'
 }: UseErrorBoundaryGalleryProps) {
   const [searchQuery, setSearchQuery] = useState(initialSearchQuery)
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState(initialSearchQuery)
@@ -30,6 +34,8 @@ export function useErrorBoundaryGallery({
   const [selectedTags, setSelectedTags] = useState<SnippetFeature[]>(initialTags)
   const [selectedLanguages, setSelectedLanguages] = useState<SnippetLanguage[]>(initialLanguages)
   const [selectedBadges, setSelectedBadges] = useState<SnippetBadge[]>(initialBadges)
+  const [sortField, setSortField] = useState<SortField>(initialSortField)
+  const [sortDirection, setSortDirection] = useState<SortDirection>(initialSortDirection)
   const [error, setError] = useState<string | null>(null)
   
   // Refs for performance tracking
@@ -89,18 +95,24 @@ export function useErrorBoundaryGallery({
   // Destructure for easier access
   const { categories: availableCategories, tags: availableTags, languages: availableLanguages, badges: availableBadges } = availableCollections
 
-  // Optimized filtered snippets with caching
+  // Optimized filtered and sorted snippets with caching
   const filteredSnippets = useMemo(() => {
     try {
       setError(null)
       
-      const filterKey = `${debouncedSearchQuery}_${selectedCategory || ''}_${selectedTags.join(',')}_${selectedLanguages.join(',')}_${selectedBadges.join(',')}`
+      // Create a more reliable cache key with sorted arrays to prevent order-dependent cache misses
+      const sortedTags = [...selectedTags].sort().join(',')
+      const sortedLanguages = [...selectedLanguages].sort().join(',')
+      const sortedBadges = [...selectedBadges].sort().join(',')
+      const filterKey = `${debouncedSearchQuery}_${selectedCategory || ''}_${sortedTags}_${sortedLanguages}_${sortedBadges}_${sortField}_${sortDirection}`
       
       if (cache.has(filterKey)) {
         return cache.get(filterKey)
       }
 
-      const result = filterSnippets(snippets, debouncedSearchQuery, selectedCategory, selectedTags, selectedLanguages, selectedBadges)
+      // First filter, then sort
+      const filtered = filterSnippets(snippets, debouncedSearchQuery, selectedCategory, selectedTags, selectedLanguages, selectedBadges)
+      const result = sortSnippets(filtered, sortField, sortDirection)
       
       // Cache result for future use
       cache.set(filterKey, result)
@@ -118,7 +130,7 @@ export function useErrorBoundaryGallery({
       setError(err instanceof Error ? err.message : 'Failed to filter snippets')
       return []
     }
-  }, [snippets, debouncedSearchQuery, selectedCategory, selectedTags, selectedLanguages, selectedBadges])
+  }, [snippets, debouncedSearchQuery, selectedCategory, selectedTags, selectedLanguages, selectedBadges, sortField, sortDirection])
 
   // Optimized handlers with stable references
   const handleSearchChange = useCallback((query: string) => {
@@ -180,6 +192,18 @@ export function useErrorBoundaryGallery({
     setSelectedBadges([])
   }, [])
 
+  const handleSortFieldChange = useCallback((field: SortField) => {
+    setSortField(field)
+  }, [])
+
+  const handleSortDirectionChange = useCallback((direction: SortDirection) => {
+    setSortDirection(direction)
+  }, [])
+
+  const toggleSortDirection = useCallback(() => {
+    setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc')
+  }, [])
+
   const clearAllFilters = useCallback(() => {
     setSearchQuery('')
     setDebouncedSearchQuery('')
@@ -187,6 +211,8 @@ export function useErrorBoundaryGallery({
     setSelectedTags([])
     setSelectedLanguages([])
     setSelectedBadges([])
+    setSortField('title')
+    setSortDirection('asc')
     setError(null)
     // Clear relevant cache entries
     cache.clear()
@@ -232,6 +258,8 @@ export function useErrorBoundaryGallery({
     if (selectedTags.length > 0) params.set('tags', selectedTags.join(','))
     if (selectedLanguages.length > 0) params.set('languages', selectedLanguages.join(','))
     if (selectedBadges.length > 0) params.set('badges', selectedBadges.join(','))
+    if (sortField !== 'title') params.set('sort', sortField)
+    if (sortDirection !== 'asc') params.set('sortDir', sortDirection)
 
     const newURL = params.toString() 
       ? `${window.location.pathname}?${params.toString()}`
@@ -240,7 +268,7 @@ export function useErrorBoundaryGallery({
     if (window.location.href !== window.location.origin + newURL) {
       window.history.replaceState({}, '', newURL)
     }
-  }, [debouncedSearchQuery, selectedCategory, selectedTags, selectedLanguages, selectedBadges])
+  }, [debouncedSearchQuery, selectedCategory, selectedTags, selectedLanguages, selectedBadges, sortField, sortDirection])
 
   useEffect(() => {
     if (urlTimeoutRef.current) {
@@ -263,10 +291,12 @@ export function useErrorBoundaryGallery({
     selectedTags,
     selectedLanguages,
     selectedBadges,
+    sortField,
+    sortDirection,
     filteredSnippets,
     isLoading: false,
     error
-  }), [searchQuery, selectedCategory, selectedTags, selectedLanguages, selectedBadges, filteredSnippets, error])
+  }), [searchQuery, selectedCategory, selectedTags, selectedLanguages, selectedBadges, sortField, sortDirection, filteredSnippets, error])
 
   // Cleanup on unmount
   useEffect(() => {
@@ -293,6 +323,9 @@ export function useErrorBoundaryGallery({
     clearLanguages,
     handleBadgeToggle,
     clearBadges,
+    handleSortFieldChange,
+    handleSortDirectionChange,
+    toggleSortDirection,
     clearAllFilters,
     
     // Computed values

@@ -5,6 +5,7 @@ import { snippets } from "./data/snippets";
 import { LazyErrorBoundaryCard } from "./components/gallery/LazyErrorBoundaryCard";
 import { HeaderBanner } from "./components/layout/HeaderBanner";
 import { StickyHeader } from "./components/layout/StickyHeader";
+import { SortDropdown } from "./components/common/SortDropdown";
 import { useErrorBoundaryGallery } from "./hooks/useErrorBoundaryGallery";
 import {
   Search,
@@ -36,7 +37,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { SNIPPET_CATEGORIES, SNIPPET_FEATURES, SNIPPET_LANGUAGES, SNIPPET_BADGES } from "./lib/constants";
-import type { SnippetCategory, SnippetFeature, SnippetLanguage, SnippetBadge } from "./lib/types";
+import type { SnippetCategory, SnippetFeature, SnippetLanguage, SnippetBadge, SortField, SortDirection } from "./lib/types";
 
 // Loading skeleton for gallery cards
 function GallerySkeleton() {
@@ -538,6 +539,8 @@ export default function Home() {
     selectedTags,
     selectedLanguages,
     selectedBadges,
+    sortField,
+    sortDirection,
     filteredSnippets,
     isLoading,
     error,
@@ -546,6 +549,9 @@ export default function Home() {
     handleTagToggle,
     handleLanguageToggle,
     handleBadgeToggle,
+    handleSortFieldChange,
+    handleSortDirectionChange,
+    toggleSortDirection,
     clearAllFilters,
     availableCategories,
     availableTags,
@@ -642,29 +648,48 @@ export default function Home() {
                 </Sheet>
               </div>
 
-              {/* Search results info */}
-              {(searchQuery || stats.hasActiveFilters) && (
-                <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <p className="text-muted-foreground">
-                    {filteredSnippets.length === 0
-                      ? `No results found`
-                      : `Found ${filteredSnippets.length} result${
-                          filteredSnippets.length === 1 ? "" : "s"
-                        }`}
-                    {searchQuery && ` for "${searchQuery}"`}
-                  </p>
-                  {stats.hasActiveFilters && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={clearAllFilters}
-                      className="self-start sm:self-auto"
-                    >
-                      Clear filters
-                    </Button>
-                  )}
+              {/* Search results info and controls */}
+              <div className="mb-6">
+                {/* Results info and sort controls */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="flex-1 min-w-0 order-2 sm:order-1">
+                    {(searchQuery || stats.hasActiveFilters) && (
+                      <p className="text-muted-foreground text-sm">
+                        {filteredSnippets.length === 0
+                          ? `No results found`
+                          : `Found ${filteredSnippets.length} result${
+                              filteredSnippets.length === 1 ? "" : "s"
+                            }`}
+                        {searchQuery && ` for "${searchQuery}"`}
+                      </p>
+                    )}
+                  </div>
+                  
+                  <div className="flex items-center justify-end gap-2 flex-shrink-0 order-1 sm:order-2 overflow-visible">
+                    {/* Sort dropdown */}
+                    <div className="relative">
+                      <SortDropdown
+                        sortField={sortField}
+                        sortDirection={sortDirection}
+                        onSortFieldChange={handleSortFieldChange}
+                        onToggleSortDirection={toggleSortDirection}
+                      />
+                    </div>
+                    
+                    {/* Clear filters button */}
+                    {stats.hasActiveFilters && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={clearAllFilters}
+                        className="whitespace-nowrap text-xs sm:text-sm"
+                      >
+                        Clear filters
+                      </Button>
+                    )}
+                  </div>
                 </div>
-              )}
+              </div>
 
               {/* Error state */}
               {error && (

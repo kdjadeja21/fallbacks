@@ -1,4 +1,4 @@
-import type { SnippetCategory, SnippetFeature } from './types'
+import type { SnippetCategory, SnippetFeature, SortField } from './types'
 
 export const SNIPPET_CATEGORIES: Record<SnippetCategory, string> = {
   professional: 'Professional',
@@ -72,6 +72,27 @@ export const SNIPPET_BADGES: Record<string, { label: string; variant: 'default' 
   stable: { label: 'Stable', variant: 'outline' },
   beta: { label: 'Beta', variant: 'secondary' },
   experimental: { label: 'Experimental', variant: 'destructive' }
+} as const
+
+export const SORT_OPTIONS: Record<SortField, string> = {
+  title: 'Name',
+  category: 'Category',
+  complexity: 'Complexity',
+  badge: 'Status'
+} as const
+
+export const COMPLEXITY_ORDER: Record<'simple' | 'intermediate' | 'advanced', number> = {
+  simple: 0,
+  intermediate: 1,
+  advanced: 2
+} as const
+
+export const BADGE_ORDER: Record<string, number> = {
+  new: 0,
+  popular: 1,
+  stable: 2,
+  beta: 3,
+  experimental: 4
 } as const
 
 export const TEMPLATE_PATHS = {
