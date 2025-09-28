@@ -125,3 +125,15 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Custom animations for error boundaries */
+@keyframes gridMove {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(20px, 20px); }
+}
+
+@layer utilities {
+  .animate-grid-move {
+    animation: gridMove 20s linear infinite;
+  }
+}

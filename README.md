@@ -49,7 +49,7 @@ A collection of reusable, customizable Error Boundary components for Next.js app
 5. Import and use the error boundary in your components:
 
 ```tsx
-import { FancyErrorBoundary } from '@/components/error-boundaries/FancyErrorBoundary';
+import { FancyErrorBoundary } from '@/app/components/error-boundaries/FancyErrorBoundary';
 
 export default function MyComponent() {
   return (
@@ -74,7 +74,6 @@ export default function MyComponent() {
    "use client"
 
    import React from "react"
-   import { Button } from "@/components/ui/button" // Optional UI components
 
    interface Props {
      children: React.ReactNode
@@ -124,7 +123,15 @@ export default function MyComponent() {
    }
    ```
 
-3. Add your template to the gallery by updating `app/data/snippets.tsx`:
+3. Register your template in the template loader by updating `app/lib/template-loader.ts`:
+   ```tsx
+   const templateLoaders = {
+     // ... existing templates
+     'custom-template': () => import('@/app/components/error-boundaries/CustomErrorBoundary'),
+   } as const
+   ```
+
+4. Add your template to the gallery by updating `app/data/snippets.tsx`:
    ```tsx
    export const snippets: Snippet[] = [
      // ... existing templates
@@ -144,13 +151,13 @@ export default function MyComponent() {
    ];
    ```
 
-4. Test your template:
+5. Test your template:
    - Ensure it handles errors properly
    - Test responsive design
    - Verify any animations or interactions
    - Check accessibility features
 
-5. Create a pull request with:
+6. Create a pull request with:
    - Your new template component
    - Updated snippets file
    - Brief description of the template

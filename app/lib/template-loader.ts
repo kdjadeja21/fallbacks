@@ -5,19 +5,19 @@ import type { ErrorBoundaryProps } from './types'
 
 // Template loader registry
 const templateLoaders = {
-  'professional-red': () => import('../components/error-boundaries/ProfessionalRedErrorBoundary'),
-  'professional-blue': () => import('../components/error-boundaries/ProfessionalBlueErrorBoundary'),
-  'pro-card': () => import('../components/error-boundaries/ProCardErrorBoundary'),
-  'animated': () => import('../components/error-boundaries/AnimatedErrorBoundary'),
-  'retry': () => import('../components/error-boundaries/RetryErrorBoundary'),
-  'collapsible': () => import('../components/error-boundaries/CollapsibleErrorBoundary'),
-  'detailed': () => import('../components/error-boundaries/DetailedErrorBoundary'),
-  'minimal': () => import('../components/error-boundaries/MinimalErrorBoundary'),
-  'compact': () => import('../components/error-boundaries/CompactErrorBoundary'),
-  'dark-mode': () => import('../components/error-boundaries/DarkModeErrorBoundary'),
-  'gradient': () => import('../components/error-boundaries/GradientErrorBoundary'),
-  'fancy': () => import('../components/error-boundaries/FancyErrorBoundary'),
-  'icon': () => import('../components/error-boundaries/IconErrorBoundary'),
+  'professional-red': () => import('@/app/components/error-boundaries/ProfessionalRedErrorBoundary'),
+  'professional-blue': () => import('@/app/components/error-boundaries/ProfessionalBlueErrorBoundary'),
+  'pro-card': () => import('@/app/components/error-boundaries/ProCardErrorBoundary'),
+  'animated': () => import('@/app/components/error-boundaries/AnimatedErrorBoundary'),
+  'retry': () => import('@/app/components/error-boundaries/RetryErrorBoundary'),
+  'collapsible': () => import('@/app/components/error-boundaries/CollapsibleErrorBoundary'),
+  'detailed': () => import('@/app/components/error-boundaries/DetailedErrorBoundary'),
+  'minimal': () => import('@/app/components/error-boundaries/MinimalErrorBoundary'),
+  'compact': () => import('@/app/components/error-boundaries/CompactErrorBoundary'),
+  'dark-mode': () => import('@/app/components/error-boundaries/DarkModeErrorBoundary'),
+  'gradient': () => import('@/app/components/error-boundaries/GradientErrorBoundary'),
+  'fancy': () => import('@/app/components/error-boundaries/FancyErrorBoundary'),
+  'icon': () => import('@/app/components/error-boundaries/IconErrorBoundary'),
 } as const
 
 export type TemplateId = keyof typeof templateLoaders
