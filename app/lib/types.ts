@@ -18,7 +18,7 @@ export interface ErrorBoundaryState {
 }
 
 export type SnippetCategory = 'professional' | 'interactive' | 'detailed' | 'minimal' | 'themed'
-export type SnippetFeature = 'retry' | 'collapsible' | 'copy' | 'animated' | 'themed' | 'support' | 'warning' | 'info' | 'inline-actions' | 'modern' | 'comprehensive' | 'smooth' | 'bounce' | 'transitions' | 'automatic' | 'smart' | 'loading' | 'tracking' | 'details' | 'stack-trace' | 'essential' | 'simple' | 'clean' | 'space-efficient' | 'inline' | 'minimal' | 'dark-mode' | 'red-accent' | 'gradient' | 'colorful' | 'beautiful' | 'fancy' | 'elegant' | 'premium' | 'shadow' | 'icon' | 'centered' | 'svg' | 'orange' | 'professional' | 'card' | 'detailed' | 'compact'
+export type SnippetFeature = 'retry' | 'collapsible' | 'copy' | 'animated' | 'themed' | 'support' | 'warning' | 'info' | 'inline-actions' | 'modern' | 'comprehensive' | 'smooth' | 'bounce' | 'transitions' | 'automatic' | 'smart' | 'loading' | 'tracking' | 'details' | 'stack-trace' | 'essential' | 'simple' | 'clean' | 'space-efficient' | 'inline' | 'minimal' | 'dark-mode' | 'red-accent' | 'gradient' | 'colorful' | 'beautiful' | 'fancy' | 'elegant' | 'premium' | 'shadow' | 'icon' | 'centered' | 'svg' | 'orange' | 'professional' | 'card' | 'detailed' | 'compact' | 'developer' | 'debugging' | 'toast' | 'lightweight' | 'accessible' | 'responsive' | 'customizable' | 'persistent' | 'errorBoundary' | 'auto-hide' | 'variants' | 'flexible' | 'auto-retry' | 'recovery'
 
 export type SnippetLanguage = 'jsx' | 'tsx' | 'css' | 'tailwind' | 'html' | 'scss' | 'sass' | 'styled-components' | 'emotion'
 export type SnippetBadge = 'new' | 'popular' | 'stable' | 'beta' | 'experimental'

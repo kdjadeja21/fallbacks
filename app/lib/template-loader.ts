@@ -18,6 +18,14 @@ const templateLoaders = {
   'gradient': () => import('@/app/components/error-boundaries/GradientErrorBoundary'),
   'fancy': () => import('@/app/components/error-boundaries/FancyErrorBoundary'),
   'icon': () => import('@/app/components/error-boundaries/IconErrorBoundary'),
+  'modern-clean': () => import('@/app/components/error-boundaries/ModernCleanErrorBoundary'),
+  'developer-friendly': () => import('@/app/components/error-boundaries/DeveloperFriendlyErrorBoundary'),
+  'simple-toast': () => import('@/app/components/error-boundaries/SimpleToastErrorBoundary'),
+  'inline-simple': () => import('@/app/components/error-boundaries/InlineSimpleErrorBoundary'),
+  'quick-recovery': () => import('@/app/components/error-boundaries/QuickRecoveryErrorBoundary'),
+  'smart-recovery': () => import('@/app/components/error-boundaries/SmartRecoveryErrorBoundary'),
+  'developer-centric': () => import('@/app/components/error-boundaries/DeveloperCentricErrorBoundary'),
+  'graceful-fallback': () => import('@/app/components/error-boundaries/GracefulFallbackErrorBoundary'),
 } as const
 
 export type TemplateId = keyof typeof templateLoaders

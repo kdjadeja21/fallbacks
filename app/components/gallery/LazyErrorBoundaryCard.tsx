@@ -138,7 +138,9 @@ export function LazyErrorBoundaryCard({ snippet }: Props) {
         const errorData = await response.json();
         console.error("[v0] Copy API error:", errorData);
         throw new Error(errorData.error || "Failed to copy");
-      } // Get file text instead of blob
+      }
+      
+      // Get file text instead of blob
       const text = await response.text();
 
       // Add the snippet title as a comment at the top of the code

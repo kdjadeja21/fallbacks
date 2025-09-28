@@ -51,7 +51,21 @@ export const SNIPPET_FEATURES: Record<SnippetFeature, string> = {
   professional: 'Professional',
   card: 'Card Style',
   detailed: 'Detailed Info',
-  compact: 'Compact Design'
+  compact: 'Compact Design',
+  developer: 'Developer Tools',
+  debugging: 'Debugging Support',
+  toast: 'Toast Notifications',
+  lightweight: 'Lightweight',
+  accessible: 'Accessible',
+  responsive: 'Responsive Design',
+  customizable: 'Customizable',
+  persistent: 'Persistent State',
+  errorBoundary: 'Error Boundary',
+  'auto-hide': 'Auto Hide',
+  variants: 'Variants',
+  flexible: 'Flexible',
+  'auto-retry': 'Auto Retry',
+  recovery: 'Recovery'
 } as const
 
 export const SNIPPET_LANGUAGES: Record<string, string> = {

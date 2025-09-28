@@ -154,14 +154,20 @@ export async function GET(request: NextRequest) {
       ? "text/typescript; charset=utf-8"
       : "text/javascript; charset=utf-8"
 
+    // Calculate the correct byte length for the Content-Length header
+    const contentBuffer = Buffer.from(fileContent, 'utf-8')
+    const contentLength = contentBuffer.length
+
     return new NextResponse(fileContent, {
       headers: {
         "Content-Type": contentType,
         "Content-Disposition": `attachment; filename="${downloadFilename}"`,
-        "Content-Length": fileContent.length.toString(),
+        "Content-Length": contentLength.toString(),
         "Cache-Control": "public, max-age=3600", // Cache for 1 hour
         "X-Content-Type-Options": "nosniff",
         "X-Frame-Options": "DENY",
+        // Ensure proper encoding
+        "Content-Encoding": "identity",
       },
     })
   } catch (error) {

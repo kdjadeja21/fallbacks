@@ -15,6 +15,14 @@ import { IconErrorBoundary } from "@/app/components/error-boundaries/IconErrorBo
 import { MinimalErrorBoundary } from "@/app/components/error-boundaries/MinimalErrorBoundary"
 import { ProCardErrorBoundary } from "@/app/components/error-boundaries/ProCardErrorBoundary"
 import { RetryErrorBoundary } from "@/app/components/error-boundaries/RetryErrorBoundary"
+import { ModernCleanErrorBoundary } from "@/app/components/error-boundaries/ModernCleanErrorBoundary"
+import { DeveloperFriendlyErrorBoundary } from "@/app/components/error-boundaries/DeveloperFriendlyErrorBoundary"
+import { SimpleToastErrorBoundary } from "@/app/components/error-boundaries/SimpleToastErrorBoundary"
+import { InlineSimpleErrorBoundary } from "@/app/components/error-boundaries/InlineSimpleErrorBoundary"
+import { QuickRecoveryErrorBoundary } from "@/app/components/error-boundaries/QuickRecoveryErrorBoundary"
+import { SmartRecoveryErrorBoundary } from "@/app/components/error-boundaries/SmartRecoveryErrorBoundary"
+import { DeveloperCentricErrorBoundary } from "@/app/components/error-boundaries/DeveloperCentricErrorBoundary"
+import { GracefulFallbackErrorBoundary } from "@/app/components/error-boundaries/GracefulFallbackErrorBoundary"
 
 export const snippets: Snippet[] = [
   {
@@ -185,5 +193,109 @@ export const snippets: Snippet[] = [
     features: ["icon", "centered", "svg", "orange"] as const,
     languages: ["tsx", "tailwind"] as const,
     badge: "stable" as const,
+  },
+  {
+    id: "modern-clean",
+    title: "Modern Clean Error Boundary",
+    description: "Simple, clean and modern error boundary with minimal design and essential features for developers.",
+    component: ModernCleanErrorBoundary,
+    category: "professional",
+    tags: ["modern", "clean", "simple", "developer"] as const,
+    templatePath: "app/components/error-boundaries/ModernCleanErrorBoundary.tsx",
+    complexity: "simple" as const,
+    features: ["modern", "clean", "simple", "developer"] as const,
+    languages: ["tsx", "tailwind"] as const,
+    badge: "new" as const,
+  },
+  {
+    id: "developer-friendly",
+    title: "Developer Friendly Error Boundary",
+    description: "Developer-focused error boundary with stack traces, copy functionality, and detailed debugging information.",
+    component: DeveloperFriendlyErrorBoundary,
+    category: "detailed",
+    tags: ["developer", "debugging", "stack-trace", "copy"] as const,
+    templatePath: "app/components/error-boundaries/DeveloperFriendlyErrorBoundary.tsx",
+    complexity: "intermediate" as const,
+    features: ["developer", "debugging", "stack-trace", "copy"] as const,
+    languages: ["tsx", "tailwind"] as const,
+    badge: "new" as const,
+  },
+  {
+    id: "simple-toast",
+    title: "Simple Toast Error Boundary",
+    description: "Lightweight toast-style error boundary with auto-hide functionality and minimal UI footprint.",
+    component: SimpleToastErrorBoundary,
+    category: "minimal",
+    tags: ["toast", "lightweight", "auto-hide", "minimal"] as const,
+    templatePath: "app/components/error-boundaries/SimpleToastErrorBoundary.tsx",
+    complexity: "simple" as const,
+    features: ["toast", "lightweight", "auto-hide", "minimal"] as const,
+    languages: ["tsx", "tailwind"] as const,
+    badge: "new" as const,
+  },
+  {
+    id: "inline-simple",
+    title: "Inline Simple Error Boundary",
+    description: "Ultra-compact inline error boundary with multiple display variants for different use cases.",
+    component: InlineSimpleErrorBoundary,
+    category: "minimal",
+    tags: ["inline", "compact", "variants", "flexible"] as const,
+    templatePath: "app/components/error-boundaries/InlineSimpleErrorBoundary.tsx",
+    complexity: "simple" as const,
+    features: ["inline", "compact", "variants", "flexible"] as const,
+    languages: ["tsx", "tailwind"] as const,
+    badge: "new" as const,
+  },
+  {
+    id: "quick-recovery",
+    title: "Quick Recovery Error Boundary",
+    description: "Smart error boundary with automatic retry logic, recovery attempts tracking, and manual controls.",
+    component: QuickRecoveryErrorBoundary,
+    category: "interactive",
+    tags: ["auto-retry", "recovery", "smart", "tracking"] as const,
+    templatePath: "app/components/error-boundaries/QuickRecoveryErrorBoundary.tsx",
+    complexity: "intermediate" as const,
+    features: ["auto-retry", "recovery", "smart", "tracking"] as const,
+    languages: ["tsx", "tailwind"] as const,
+    badge: "new" as const,
+  },
+  {
+    id: "smart-recovery",
+    title: "Smart Recovery Error Boundary",
+    description: "Advanced error boundary with retry, copy error details, expandable technical details, and smooth animations.",
+    component: SmartRecoveryErrorBoundary,
+    category: "interactive",
+    tags: ["retry", "copy", "collapsible", "animated"] as const,
+    templatePath: "app/components/error-boundaries/SmartRecoveryErrorBoundary.tsx",
+    complexity: "intermediate" as const,
+    features: ["retry", "copy", "collapsible", "animated"] as const,
+    languages: ["tsx", "tailwind"] as const,
+    badge: "new" as const,
+  },
+  {
+    id: "developer-centric",
+    title: "Developer Centric Error Boundary",
+    description: "Developer-focused error boundary with tabbed debugging interface, quick copy actions, and comprehensive error reporting.",
+    component: DeveloperCentricErrorBoundary,
+    category: "detailed",
+    tags: ["developer", "debugging", "copy", "comprehensive"] as const,
+    templatePath: "app/components/error-boundaries/DeveloperCentricErrorBoundary.tsx",
+    complexity: "advanced" as const,
+    features: ["developer", "debugging", "copy", "comprehensive"] as const,
+    languages: ["tsx", "tailwind"] as const,
+    badge: "new" as const,
+  },
+  {
+    id: "graceful-fallback",
+    title: "Graceful Fallback Error Boundary",
+    description: "Production-friendly error boundary with graceful messaging, user-focused recovery, and optional technical details.",
+    component: GracefulFallbackErrorBoundary,
+    category: "professional",
+    tags: ["professional", "clean", "support", "elegant"] as const,
+    templatePath: "app/components/error-boundaries/GracefulFallbackErrorBoundary.tsx",
+    complexity: "simple" as const,
+    features: ["professional", "clean", "support", "elegant"] as const,
+    languages: ["tsx", "tailwind"] as const,
+    badge: "new" as const,
   },
 ]
