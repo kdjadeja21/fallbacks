@@ -131,10 +131,10 @@ Last Attempt: ${new Date().toISOString()}
   render() {
     if (this.state.hasError) {
       return (
-        <div className="relative p-6 bg-gradient-to-r from-amber-50 to-orange-50 border-l-4 border-amber-400 rounded-r-xl shadow-sm">
-          <div className="flex items-start gap-5">
+        <div className="relative w-full max-w-full overflow-hidden p-4 sm:p-6 bg-gradient-to-r from-amber-50 to-orange-50 border-l-4 border-amber-400 rounded-r-xl shadow-sm">
+          <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-5">
             {/* Animated Icon */}
-            <div className="relative">
+            <div className="relative self-center sm:self-start">
               <div className="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center">
                 <ZapIcon className="h-6 w-6 text-amber-600" />
               </div>
@@ -145,23 +145,23 @@ Last Attempt: ${new Date().toISOString()}
               )}
             </div>
             
-            <div className="flex-1">
+            <div className="flex-1 text-center sm:text-left min-w-0 max-w-full overflow-hidden">
               {/* Heading */}
-              <h3 className="text-xl font-bold text-gray-900 mb-2">
+              <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
                 Component Error
               </h3>
               
               {/* Subheading */}
-              <p className="text-gray-700 mb-6">
+              <p className="text-gray-700 mb-4 sm:mb-6">
                 Something unexpected happened. Let's get this fixed quickly.
               </p>
               
-              {/* Action Buttons - Horizontal Layout */}
-              <div className="flex items-center gap-3">
+              {/* Action Buttons - Responsive Layout */}
+              <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-3">
                 <button
                   onClick={this.handleRetry}
                   disabled={this.state.isRetrying}
-                  className="flex items-center gap-2 px-5 py-2.5 bg-amber-500 text-white font-semibold rounded-lg hover:bg-amber-600 disabled:opacity-50 transition-all duration-200 shadow-sm"
+                  className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 bg-amber-500 text-white font-semibold rounded-lg hover:bg-amber-600 disabled:opacity-50 transition-all duration-200 shadow-sm"
                 >
                   <RefreshIcon className={`h-4 w-4 ${this.state.isRetrying ? "animate-spin" : ""}`} />
                   {this.state.isRetrying ? "Retrying..." : "Retry"}
@@ -169,7 +169,7 @@ Last Attempt: ${new Date().toISOString()}
                 
                 <button
                   onClick={this.copyErrorDetails}
-                  className="flex items-center gap-2 px-4 py-2.5 text-amber-700 border border-amber-300 rounded-lg hover:bg-amber-100 transition-colors"
+                  className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 text-amber-700 border border-amber-300 rounded-lg hover:bg-amber-100 transition-colors"
                 >
                   <ClipboardIcon className="h-4 w-4" />
                   {this.state.copied ? "Copied!" : "Copy"}
@@ -177,7 +177,7 @@ Last Attempt: ${new Date().toISOString()}
                 
                 <button
                   onClick={this.toggleDetails}
-                  className="flex items-center gap-1 text-gray-600 hover:text-gray-800 transition-colors"
+                  className="w-full sm:w-auto flex items-center justify-center gap-1 text-gray-600 hover:text-gray-800 transition-colors"
                 >
                   <ChevronRightIcon className={`h-4 w-4 transition-transform ${this.state.showDetails ? "rotate-90" : ""}`} />
                   <span className="text-sm">Details</span>
@@ -186,18 +186,18 @@ Last Attempt: ${new Date().toISOString()}
               
               {/* Collapsible Details */}
               {this.state.showDetails && (
-                <div className="mt-4 p-4 bg-white border border-amber-200 rounded-lg">
+                <div className="mt-4 p-3 sm:p-4 bg-white border border-amber-200 rounded-lg w-full">
                   <div className="space-y-4 text-sm">
                     <div>
                       <span className="font-medium text-gray-700">Error Type:</span>
-                      <div className="mt-1 p-2 bg-red-50 border border-red-200 rounded text-red-700 font-mono text-xs">
+                      <div className="mt-1 p-2 bg-red-50 border border-red-200 rounded text-red-700 font-mono text-xs break-words overflow-wrap-anywhere">
                         {this.state.error?.constructor.name || 'UnknownError'}
                       </div>
                     </div>
                     
                     <div>
                       <span className="font-medium text-gray-700">Error Message:</span>
-                      <div className="mt-1 p-2 bg-red-50 border border-red-200 rounded text-red-700 font-mono text-xs">
+                      <div className="mt-1 p-2 bg-red-50 border border-red-200 rounded text-red-700 font-mono text-xs break-words overflow-wrap-anywhere">
                         {this.state.error?.message || 'No error message provided'}
                       </div>
                     </div>
@@ -205,7 +205,7 @@ Last Attempt: ${new Date().toISOString()}
                     <div>
                       <span className="font-medium text-gray-700">Stack Trace:</span>
                       <div className="mt-1 p-2 bg-gray-50 border border-gray-200 rounded font-mono text-xs max-h-32 overflow-y-auto">
-                        <pre className="whitespace-pre-wrap break-all text-gray-700">
+                        <pre className="whitespace-pre-wrap break-words overflow-wrap-anywhere text-gray-700">
                           {this.state.error?.stack || 'Stack trace not available'}
                         </pre>
                       </div>
@@ -215,14 +215,14 @@ Last Attempt: ${new Date().toISOString()}
                       <div>
                         <span className="font-medium text-gray-700">Component Stack:</span>
                         <div className="mt-1 p-2 bg-gray-50 border border-gray-200 rounded font-mono text-xs max-h-32 overflow-y-auto">
-                          <pre className="whitespace-pre-wrap break-all text-gray-700">
+                          <pre className="whitespace-pre-wrap break-words overflow-wrap-anywhere text-gray-700">
                             {this.state.errorInfo.componentStack.trim()}
                           </pre>
                         </div>
                       </div>
                     )}
                     
-                    <div className="flex justify-between text-xs text-gray-500 pt-2 border-t border-amber-200">
+                    <div className="flex flex-col sm:flex-row justify-between text-xs text-gray-500 pt-2 border-t border-amber-200 gap-2 sm:gap-0">
                       <span>Retries: {this.state.retryCount}</span>
                       <span>Time: {new Date().toLocaleString()}</span>
                     </div>

@@ -93,14 +93,14 @@ export class ProfessionalRedErrorBoundary extends React.Component<
   render() {
     if (this.state.hasError) {
       return (
-        <div className="p-4 sm:p-6 bg-gray-50 border border-gray-200 rounded-lg">
+        <div className="w-full max-w-full overflow-hidden p-4 sm:p-6 bg-gray-50 border border-gray-200 rounded-lg">
           <div className="flex flex-col sm:flex-row items-start gap-4">
             {/* Red warning icon */}
             <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0 self-center sm:self-start">
               <AlertTriangleIcon className="w-6 h-6 text-red-600" />
             </div>
 
-            <div className="flex-1 text-center sm:text-left min-w-0">
+            <div className="flex-1 text-center sm:text-left min-w-0 max-w-full overflow-hidden">
               {/* Header */}
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Something went wrong</h3>
 
@@ -140,15 +140,28 @@ export class ProfessionalRedErrorBoundary extends React.Component<
 
               {/* Error details */}
               {this.state.showDetails && (
-                <div className="mt-3 p-3 bg-gray-100 rounded-md w-full">
-                  <div className="text-xs text-gray-700 bg-white p-2 rounded border max-h-32 overflow-y-auto">
-                                      <div className="p-3 bg-red-100 rounded border">
-                    <pre className="whitespace-pre-wrap font-mono break-words overflow-wrap-anywhere">
-                      {this.state.error 
-                        ? `Error: ${this.state.error.toString()}\nComponent Stack: ${this.state.errorInfo?.componentStack || 'N/A'}`
-                        : "Component rendering failed - please try refreshing the page or contact support if the issue persists."}
-                    </pre>
-                  </div>
+                <div className="mt-3 w-full overflow-hidden">
+                  <div className="p-3 bg-gray-100 rounded-md overflow-hidden">
+                    <div className="mb-3">
+                      <strong className="text-gray-900 text-sm">Error:</strong>
+                      <div className="mt-1 p-2 bg-red-50 border border-red-200 rounded overflow-hidden">
+                        <div className="text-xs font-mono text-red-600 break-all overflow-wrap-anywhere max-w-full">
+                          {this.state.error?.toString() || "Unknown error occurred"}
+                        </div>
+                      </div>
+                    </div>
+                    {this.state.errorInfo?.componentStack && (
+                      <div>
+                        <strong className="text-gray-900 text-sm">Component Stack:</strong>
+                        <div className="mt-1 bg-red-50 border border-red-200 rounded overflow-hidden">
+                          <div className="p-2 max-h-32 overflow-y-auto overflow-x-hidden">
+                            <pre className="text-xs text-gray-700 whitespace-pre-wrap break-all overflow-wrap-anywhere max-w-full">
+                              {this.state.errorInfo.componentStack}
+                            </pre>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}

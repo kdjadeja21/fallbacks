@@ -98,14 +98,14 @@ export class ProfessionalBlueErrorBoundary extends React.Component<
   render() {
     if (this.state.hasError) {
       return (
-        <div className="p-4 sm:p-6 bg-blue-50 border border-blue-200 rounded-lg">
+        <div className="w-full max-w-full overflow-hidden p-4 sm:p-6 bg-blue-50 border border-blue-200 rounded-lg">
           <div className="flex flex-col sm:flex-row items-start gap-4">
             {/* Blue info icon */}
             <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 self-center sm:self-start">
               <InfoIcon className="w-5 h-5 text-blue-600" />
             </div>
 
-            <div className="flex-1 text-center sm:text-left min-w-0">
+            <div className="flex-1 text-center sm:text-left min-w-0 max-w-full overflow-hidden">
               {/* Header */}
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Something went wrong</h3>
 
@@ -143,20 +143,24 @@ export class ProfessionalBlueErrorBoundary extends React.Component<
 
               {/* Collapsible Error Details */}
               {this.state.showDetails && (
-                <div className="mt-4 p-3 bg-gray-100 rounded-md w-full">
-                  <div className="mb-2">
-                    <strong className="text-gray-900">Error:</strong>
-                    <div className="mt-1 text-xs sm:text-sm font-mono text-red-600 break-words overflow-wrap-anywhere">
-                      {this.state.error?.toString() || "Unknown error occurred"}
+                <div className="mt-4 p-3 bg-gray-100 rounded-md w-full overflow-hidden">
+                  <div className="mb-3">
+                    <strong className="text-gray-900 text-sm">Error:</strong>
+                    <div className="mt-1 p-2 bg-white rounded border">
+                      <div className="text-xs font-mono text-red-600 break-all overflow-wrap-anywhere max-w-full">
+                        {this.state.error?.toString() || "Unknown error occurred"}
+                      </div>
                     </div>
                   </div>
                   {this.state.errorInfo?.componentStack && (
                     <div>
-                      <strong className="text-gray-900">Component Stack:</strong>
-                      <div className="mt-1 text-xs text-gray-700 bg-white p-2 rounded border max-h-32 overflow-y-auto">
-                        <pre className="whitespace-pre-wrap break-words overflow-wrap-anywhere">
-                          {this.state.errorInfo.componentStack}
-                        </pre>
+                      <strong className="text-gray-900 text-sm">Component Stack:</strong>
+                      <div className="mt-1 bg-white rounded border overflow-hidden">
+                        <div className="p-2 max-h-32 overflow-y-auto overflow-x-hidden">
+                          <pre className="text-xs text-gray-700 whitespace-pre-wrap break-all overflow-wrap-anywhere max-w-full">
+                            {this.state.errorInfo.componentStack}
+                          </pre>
+                        </div>
                       </div>
                     </div>
                   )}
